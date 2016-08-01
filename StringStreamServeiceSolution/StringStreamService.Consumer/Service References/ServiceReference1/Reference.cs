@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace StringStreamService.Consumer.StringStreamServiceNS {
+namespace StringStreamService.Consumer.ServiceReference1 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="StringStreamServiceNS.IStringStreamService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IStringStreamService")]
     public interface IStringStreamService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IStringStreamService/BeginStream", ReplyAction="http://tempuri.org/IStringStreamService/BeginStreamResponse")]
@@ -28,10 +28,16 @@ namespace StringStreamService.Consumer.StringStreamServiceNS {
         System.Threading.Tasks.Task PutStreamDataAsync(System.Guid streamId, string[] text);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IStringStreamService/GetSortedStream", ReplyAction="http://tempuri.org/IStringStreamService/GetSortedStreamResponse")]
-        string[] GetSortedStream(System.Guid streamId);
+        System.IO.Stream GetSortedStream(System.Guid streamId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IStringStreamService/GetSortedStream", ReplyAction="http://tempuri.org/IStringStreamService/GetSortedStreamResponse")]
-        System.Threading.Tasks.Task<string[]> GetSortedStreamAsync(System.Guid streamId);
+        System.Threading.Tasks.Task<System.IO.Stream> GetSortedStreamAsync(System.Guid streamId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IStringStreamService/GetSortedStreamFull", ReplyAction="http://tempuri.org/IStringStreamService/GetSortedStreamFullResponse")]
+        string[] GetSortedStreamFull(System.Guid streamId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IStringStreamService/GetSortedStreamFull", ReplyAction="http://tempuri.org/IStringStreamService/GetSortedStreamFullResponse")]
+        System.Threading.Tasks.Task<string[]> GetSortedStreamFullAsync(System.Guid streamId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IStringStreamService/EndStream", ReplyAction="http://tempuri.org/IStringStreamService/EndStreamResponse")]
         void EndStream(System.Guid streamId);
@@ -41,12 +47,12 @@ namespace StringStreamService.Consumer.StringStreamServiceNS {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IStringStreamServiceChannel : StringStreamService.Consumer.StringStreamServiceNS.IStringStreamService, System.ServiceModel.IClientChannel {
+    public interface IStringStreamServiceChannel : StringStreamService.Consumer.ServiceReference1.IStringStreamService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class StringStreamServiceClient : System.ServiceModel.ClientBase<StringStreamService.Consumer.StringStreamServiceNS.IStringStreamService>, StringStreamService.Consumer.StringStreamServiceNS.IStringStreamService {
+    public partial class StringStreamServiceClient : System.ServiceModel.ClientBase<StringStreamService.Consumer.ServiceReference1.IStringStreamService>, StringStreamService.Consumer.ServiceReference1.IStringStreamService {
         
         public StringStreamServiceClient() {
         }
@@ -83,12 +89,20 @@ namespace StringStreamService.Consumer.StringStreamServiceNS {
             return base.Channel.PutStreamDataAsync(streamId, text);
         }
         
-        public string[] GetSortedStream(System.Guid streamId) {
+        public System.IO.Stream GetSortedStream(System.Guid streamId) {
             return base.Channel.GetSortedStream(streamId);
         }
         
-        public System.Threading.Tasks.Task<string[]> GetSortedStreamAsync(System.Guid streamId) {
+        public System.Threading.Tasks.Task<System.IO.Stream> GetSortedStreamAsync(System.Guid streamId) {
             return base.Channel.GetSortedStreamAsync(streamId);
+        }
+        
+        public string[] GetSortedStreamFull(System.Guid streamId) {
+            return base.Channel.GetSortedStreamFull(streamId);
+        }
+        
+        public System.Threading.Tasks.Task<string[]> GetSortedStreamFullAsync(System.Guid streamId) {
+            return base.Channel.GetSortedStreamFullAsync(streamId);
         }
         
         public void EndStream(System.Guid streamId) {

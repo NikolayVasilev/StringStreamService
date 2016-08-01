@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,16 @@ namespace StringStreamService.Consumer
         {
             var guid = Guid.NewGuid();
 
-            var serviceClient = new StringStreamServiceNS.StringStreamServiceClient();
+            var serviceClient = new ServiceReference1.StringStreamServiceClient();
 
-            Console.WriteLine(serviceClient.GetSortedStream(guid).FirstOrDefault());
+            guid = serviceClient.BeginStream();
+
+            Console.WriteLine(serviceClient.GetSortedStreamFull(guid).FirstOrDefault());
+
+            serviceClient.EndStream(guid);
+
+
+            //Stream result = serviceClient.GetSortedStream(guid);
 
             serviceClient.Close();
         }

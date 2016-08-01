@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -7,32 +8,69 @@ using System.Text;
 
 namespace StringStreamService.Service
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
     public class StringStreamService : IStringStreamService
     {
+        private static List<SessionWorker> sessionWorkers = new List<SessionWorker>();
+
         public Guid BeginStream()
         {
-            throw new NotImplementedException();
+            var newSessionWorker = new SessionWorker();
+
+            sessionWorkers.Add(newSessionWorker);
+
+            return newSessionWorker.Id;
         }
 
         public void EndStream(Guid streamId)
         {
-            throw new NotImplementedException();
+            var sessionWorker = this.GetSessionWorker(streamId);
+
+            if (sessionWorker != null)
+            {
+                sessionWorker.Clear();
+                sessionWorkers.Remove(sessionWorker);
+            }
         }
 
-        public string GetData(int value)
+        public Stream GetSortedStream(Guid streamId)
         {
-            return string.Format("You entered: {0}", value);
+            var sessionWorker = this.GetSessionWorker(streamId);
+
+            if (sessionWorker == null)
+            {
+                throw new ArgumentException("No Stream found for Id: " + streamId);
+            }
+
+            return Stream.Null;
         }
 
-        public string[] GetSortedStream(Guid streamId)
+        public string[] GetSortedStreamFull(Guid streamId)
         {
+            var sessionWorker = this.GetSessionWorker(streamId);
+
+            if (sessionWorker == null)
+            {
+                throw new ArgumentException("No Stream found for Id: " + streamId);
+            }
+
             return new string[] { string.Format("You entered: {0}", streamId) };
         }
 
         public void PutStreamData(Guid streamId, string[] text)
         {
-            throw new NotImplementedException();
+            var sessionWorker = this.GetSessionWorker(streamId);
+
+            if (sessionWorker == null)
+            {
+                throw new ArgumentException("No Stream found for Id: " + streamId);
+            }
+
+            sessionWorker.Process(text);
+        }
+
+        private SessionWorker GetSessionWorker(Guid streamId)
+        {
+            return sessionWorkers.FirstOrDefault(sw => sw.Id == streamId);
         }
     }
 }

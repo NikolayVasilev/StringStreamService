@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="03dda0ca-678a-4496-8ad6-6676bec08553" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/StringStreamService.Service/StringStreamService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="529ad7eb-65d0-42a4-965c-85f156390aa2" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/StringStreamService.Service/StringStreamService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="2283ac4a-212e-4601-95f6-6f92493d126c" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/StringStreamService.Service/StringStreamService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="4bb6b3e1-1ee7-4cc9-be7c-4a7f42afe3af" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/StringStreamService.Service/StringStreamService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="62824d0f-e41c-42f3-bc17-a54c8ac5ac1f" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/StringStreamService.Service/StringStreamService/mex" />
+    <MetadataFile FileName="Message.xsd" MetadataType="Schema" ID="99296d6e-c226-4c8e-8b45-76903fdf6dd7" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/StringStreamService.Service/StringStreamService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -18,7 +19,10 @@ namespace StringStreamService.Service
         void PutStreamData(Guid streamId, string[] text);
 
         [OperationContract]
-        string[] GetSortedStream(Guid streamId);
+        Stream GetSortedStream(Guid streamId);
+
+        [OperationContract]
+        string[] GetSortedStreamFull(Guid streamId);
 
         [OperationContract]
         void EndStream(Guid streamId);
