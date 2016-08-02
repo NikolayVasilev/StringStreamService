@@ -39,7 +39,7 @@ namespace StringStreamService.Service
 
         public string[] GetSortedTextFull()
         {
-            return new string[] { };
+            return this.processor.GetSortedTextFull();
         }
     }
 }
