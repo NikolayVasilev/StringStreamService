@@ -11,16 +11,31 @@ namespace StringStreamService.Consumer
     {
         static void Main(string[] args)
         {
-            var guid = Guid.NewGuid();
-
             var serviceClient = new ServiceReference1.StringStreamServiceClient();
 
-            guid = serviceClient.BeginStream();
+            var guid = serviceClient.BeginStream();
 
             Console.WriteLine(serviceClient.GetSortedStreamFull(guid).FirstOrDefault());
 
-            serviceClient.EndStream(guid);
+            List<string> strings = new List<string>();
 
+            for (int i = 0; i < 105000; i++)
+            {
+                var guidString = Guid.NewGuid().ToString();
+
+                strings.Add(guidString);
+            }
+
+            for (int i = 0; i < 105000; i++)
+            {
+                var guidString = Guid.NewGuid().ToString();
+
+                strings.Add(guidString);
+            }
+
+            serviceClient.PutStreamData(guid, strings.ToArray());
+
+            serviceClient.EndStream(guid);
 
             //Stream result = serviceClient.GetSortedStream(guid);
 

@@ -10,7 +10,7 @@ namespace StringStreamService.Service
 {
     public class StringStreamService : IStringStreamService
     {
-        private static List<SessionWorker> sessionWorkers = new List<SessionWorker>();
+        private static List<ISessionWorker> sessionWorkers = new List<ISessionWorker>();
 
         public Guid BeginStream()
         {
@@ -41,7 +41,7 @@ namespace StringStreamService.Service
                 throw new ArgumentException("No Stream found for Id: " + streamId);
             }
 
-            return Stream.Null;
+            return sessionWorker.GetSortedStream();
         }
 
         public string[] GetSortedStreamFull(Guid streamId)
@@ -53,7 +53,7 @@ namespace StringStreamService.Service
                 throw new ArgumentException("No Stream found for Id: " + streamId);
             }
 
-            return new string[] { string.Format("You entered: {0}", streamId) };
+            return sessionWorker.GetSortedTextFull();
         }
 
         public void PutStreamData(Guid streamId, string[] text)
@@ -68,7 +68,7 @@ namespace StringStreamService.Service
             sessionWorker.Process(text);
         }
 
-        private SessionWorker GetSessionWorker(Guid streamId)
+        private ISessionWorker GetSessionWorker(Guid streamId)
         {
             return sessionWorkers.FirstOrDefault(sw => sw.Id == streamId);
         }
