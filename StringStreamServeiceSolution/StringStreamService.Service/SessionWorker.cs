@@ -34,7 +34,7 @@ namespace StringStreamService.Service
 
         public Stream GetSortedStream()
         {
-            return Stream.Null;
+            return this.processor.GetSortedStream();
         }
 
         public string[] GetSortedTextFull()

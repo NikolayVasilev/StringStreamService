@@ -16,11 +16,10 @@ namespace StringStreamService.Consumer
 
             var guid = serviceClient.BeginStream();
 
-            //Console.WriteLine(serviceClient.GetSortedStreamFull(guid).FirstOrDefault());
-
             List<string> strings = new List<string>();
 
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 92345; i++)
+            //for (int i = 0; i < 1000; i++)
             {
                 //var guidString = Guid.NewGuid().ToString();
                 var guidString = i.ToString();
@@ -30,21 +29,20 @@ namespace StringStreamService.Consumer
 
             serviceClient.PutStreamData(guid, strings.ToArray());
 
-            string[] sorted = serviceClient.GetSortedStreamFull(guid);
 
-            //foreach (var str in sorted)
-            //{
-                Console.WriteLine(sorted.Count());
-            //}
+            Stream a = serviceClient.GetSortedStream(guid);
+
+            using (StreamReader reader = new StreamReader(a))
+            {
+                while (!reader.EndOfStream)
+                {
+                    Console.WriteLine(reader.ReadLine());
+                }
+            }
 
             serviceClient.EndStream(guid);
 
             serviceClient.Close();
-        }
-
-        static async Task GetSorted(StringStreamServiceClient clent)
-        {
-
         }
     }
 }

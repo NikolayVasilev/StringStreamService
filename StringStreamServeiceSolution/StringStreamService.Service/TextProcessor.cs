@@ -10,10 +10,8 @@ namespace StringStreamService.Service
 {
     internal class TextProcessor
     {
-        //private static readonly int MaxBufferSize = 1000000;
         private static readonly int MaxBufferSize = 100000;
         private static readonly string FolderBase = @"\StringStreamService\TextsCache\";
-        private List<List<string>> currentDumpingLists = new List<List<string>>();
 
         internal List<string> CurrentBuffer { get; private set; }
         internal List<string> CacheFilePaths { get; private set; }
@@ -27,6 +25,15 @@ namespace StringStreamService.Service
             this.CacheFilePaths = new List<string>();
         }
 
+        internal Stream GetSortedStream()
+        {
+            if(this.CurrentBuffer.Count > 0)
+            {
+                this.DumpBuffer();
+            }
+
+            return new MergedStream(this.CacheFilePaths.ToList());
+        }
 
         internal void AppendLine(string line)
         {
@@ -41,10 +48,6 @@ namespace StringStreamService.Service
         internal string[] GetSortedTextFull()
         {
             List<string> result = new List<string>();
-
-            List<string> currentBuffer = this.CurrentBuffer.OrderByDescending(s => s).ToList();
-
-            List<List<string>> listsToMerge = this.currentDumpingLists.ToList();
 
             List<string> currentFiles = this.CacheFilePaths.ToList();
 
@@ -84,42 +87,11 @@ namespace StringStreamService.Service
                     }
                 }
 
-                //string minFromLists = null;
-                //List<string> minList = null;
-
-                //foreach (var list in listsToMerge)
-                //{
-                //    if (minFromLists == null || list.Count >= 0 && list.FirstOrDefault().CompareTo(minFromLists) <= 0)
-                //    {
-                //        minFromLists = list.FirstOrDefault();
-                //        minList = list;
-                //    }
-                //}
-
-                //string minFromBuffer = currentBuffer.Count > 0 ? currentBuffer.Last() : null;
-
-                //var globalMin = new string[] { minFromBuffer, minFromLists, minFromStreams }.Min();
-
-                //if (globalMin.Equals(minFromBuffer))
-                //{
-                //    currentBuffer.Remove(globalMin);
-                //}
-                //else if (globalMin.Equals(minFromStreams))
-                //{
-                //    readLines[minStream] = null;
-                //}
-                //else if (currentBuffer.Equals(minFromLists))
-                //{
-                //    minList.Remove(globalMin);
-                //}
-
-                shouldContinue = currentBuffer.Count > 0 || listsToMerge.Any(l => l.Count > 0) || streamReaders.Any(sr => !sr.EndOfStream);
-
+                shouldContinue = streamReaders.Any(sr => !sr.EndOfStream);
 
                 readLines[minStream] = null;
 
                 result.Add(minFromStreams);
-                //result.Add(globalMin);
             }
 
             Debug.WriteLine("MergeTime :" + (DateTime.Now - start).TotalMilliseconds + "ms");
@@ -154,8 +126,6 @@ namespace StringStreamService.Service
 
             var sortedCopy = bufferCopy.OrderBy(s => s).ToList();
 
-            this.currentDumpingLists.Add(sortedCopy);
-
             //Task.Factory.StartNew(() =>
             //{
                 using (StreamWriter output = new StreamWriter(writePath))
@@ -166,7 +136,6 @@ namespace StringStreamService.Service
                         output.WriteLine(line);
                     }
 
-                    this.currentDumpingLists.Remove(sortedCopy);
                     this.CacheFilePaths.Add(writePath);
                 }
             //});

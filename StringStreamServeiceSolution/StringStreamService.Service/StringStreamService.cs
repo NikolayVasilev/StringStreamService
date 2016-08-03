@@ -10,13 +10,13 @@ namespace StringStreamService.Service
 {
     public class StringStreamService : IStringStreamService
     {
-        private static List<ISessionWorker> sessionWorkers = new List<ISessionWorker>();
+        private static Dictionary<Guid, ISessionWorker> sessionWorkers = new Dictionary<Guid, ISessionWorker>();
 
         public Guid BeginStream()
         {
             var newSessionWorker = new SessionWorker();
 
-            sessionWorkers.Add(newSessionWorker);
+            sessionWorkers.Add(newSessionWorker.Id, newSessionWorker);
 
             return newSessionWorker.Id;
         }
@@ -28,7 +28,7 @@ namespace StringStreamService.Service
             if (sessionWorker != null)
             {
                 sessionWorker.Clear();
-                sessionWorkers.Remove(sessionWorker);
+                sessionWorkers.Remove(sessionWorker.Id);
             }
         }
 
@@ -70,7 +70,7 @@ namespace StringStreamService.Service
 
         private ISessionWorker GetSessionWorker(Guid streamId)
         {
-            return sessionWorkers.FirstOrDefault(sw => sw.Id == streamId);
+            return sessionWorkers.ContainsKey(streamId) ? sessionWorkers[streamId] : null;
         }
     }
 }

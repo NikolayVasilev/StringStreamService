@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="ISessionWorker.cs" />
     <Compile Include="IStringStreamService.cs" />
+    <Compile Include="MergedStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionWorker.cs" />
     <Compile Include="StringStreamService.cs" />
