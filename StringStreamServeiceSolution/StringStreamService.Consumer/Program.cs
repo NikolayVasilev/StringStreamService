@@ -12,13 +12,78 @@ namespace StringStreamService.Consumer
     {
         static void Main(string[] args)
         {
+            //TrySimpleStreaming();
+
+            //TryLargeFileStreaming();
+        }
+
+        private static void TryLargeFileStreaming()
+        {
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile6.txt";
+
+            var serviceClient = new ServiceReference1.StringStreamServiceClient();
+
+            var guid = serviceClient.BeginStream();
+
+            long lines = 0;
+            Console.WriteLine("StartUpload");
+            var startUpload = DateTime.Now;
+            using (var rdr = new StreamReader(fileName))
+            {
+                List<string> readLines = new List<string>(); 
+
+                while (!rdr.EndOfStream)
+                {
+                    var read = rdr.ReadLine();
+                    lines++;
+
+                    readLines.Add(read);
+
+                    if(readLines.Count > 10000)
+                    {
+                        serviceClient.PutStreamData(guid, readLines.ToArray());
+                        readLines.Clear();
+                    }
+                }
+
+                serviceClient.PutStreamData(guid, readLines.ToArray());
+                readLines.Clear();
+            }
+
+            Console.WriteLine("End upload. Elapsed: {0} ms", (DateTime.Now - startUpload).TotalMilliseconds);
+
+            var stream = serviceClient.GetSortedStream(guid);
+
+            long sortedLines = 0;
+
+            Console.WriteLine("StartStreaming");
+            var startStreaming = DateTime.Now;
+
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                while (!reader.EndOfStream)
+                {
+                    //Console.WriteLine(reader.ReadLine());
+                    reader.ReadLine();
+                    sortedLines++;
+                }
+            }
+
+            Console.WriteLine("End stream. Elapsed: {0} ms", (DateTime.Now - startStreaming).TotalMilliseconds);
+
+            Console.WriteLine("All acounted for: {0}.  Expected: {1}, actual: {2}", sortedLines == lines, lines, sortedLines);
+        }
+
+
+        private static void TrySimpleStreaming()
+        {
             var serviceClient = new ServiceReference1.StringStreamServiceClient();
 
             var guid = serviceClient.BeginStream();
 
             List<string> strings = new List<string>();
 
-            for (int i = 0; i < 92345; i++)
+            for (int i = 0; i < 10; i++)
             //for (int i = 0; i < 1000; i++)
             {
                 //var guidString = Guid.NewGuid().ToString();

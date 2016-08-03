@@ -16,7 +16,7 @@ namespace StringStreamService.Service
         internal List<string> CurrentBuffer { get; private set; }
         internal List<string> CacheFilePaths { get; private set; }
         private ISessionWorker sessionWorker;
-        private int currentDumpsCount = 0;
+        private long currentDumpsCount = 0;
 
         public TextProcessor(ISessionWorker sessionWorker)
         {

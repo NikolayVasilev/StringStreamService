@@ -26,10 +26,13 @@ namespace StringStreamService.Service
 
         public void Process(string[] text)
         {
-            foreach (var line in text)
-            {
-                this.processor.AppendLine(line);
-            }
+            //Task.Factory.StartNew(() =>
+            //{
+                foreach (var line in text)
+                {
+                    this.processor.AppendLine(line);
+                }
+            //});
         }
 
         public Stream GetSortedStream()
