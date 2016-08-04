@@ -12,9 +12,11 @@ namespace StringStreamService.Service
 {
     public class MergedStream : Stream
     {
+        static int streamedLines = 0;
+
         private List<string> fileList;
         private List<StreamReader> streamReaders;
-        private Dictionary<StreamReader, string> readLines = new Dictionary<StreamReader, string>();
+        private Dictionary<StreamReader, StringEncounter> readLines = new Dictionary<StreamReader, StringEncounter>();
         private List<byte> readBytes = new List<byte>();
 
         private string minFromStreams = null;
@@ -110,51 +112,6 @@ namespace StringStreamService.Service
             throw new InvalidOperationException("Stream is Read-only");
         }
 
-        internal string[] GetSortedTextFull()
-        {
-            bool shouldContinue = true;
-
-            var start = DateTime.Now;
-
-            while (shouldContinue)
-            {
-                foreach (var streamR in streamReaders)
-                {
-                    if (!readLines.ContainsKey(streamR) && !streamR.EndOfStream)
-                    {
-                        readLines.Add(streamR, null);
-                    }
-
-                    if (readLines.ContainsKey(streamR) && streamR.EndOfStream)
-                    {
-                        readLines.Remove(streamR);
-                    }
-
-                    if (readLines.ContainsKey(streamR) && readLines[streamR] == null)
-                    {
-                        readLines[streamR] = streamR.ReadLine();
-                    }
-
-                    if (readLines.ContainsKey(streamR) && (minFromStreams == null || readLines[streamR].CompareTo(minFromStreams) <= 0))
-                    {
-                        minStream = streamR;
-                        minFromStreams = readLines[streamR];
-                    }
-                }
-
-                shouldContinue = streamReaders.Any(sr => !sr.EndOfStream);
-
-                readLines[minStream] = null;
-
-                //result.Add(minFromStreams);
-            }
-
-            Debug.WriteLine("MergeTime :" + (DateTime.Now - start).TotalMilliseconds + "ms");
-
-            //return result.ToArray();
-            return null;
-        }
-
         private void FillReadBytes(int countNeeded)
         {
             while (this.readBytes.Count < countNeeded && this.HasData())
@@ -173,18 +130,23 @@ namespace StringStreamService.Service
 
                     if (this.readLines.ContainsKey(stream) && this.readLines[stream] == null)
                     {
-                        readLines[stream] = stream.ReadLine();
+                        readLines[stream] = new StringEncounter(stream.ReadLine());
                     }
 
-                    if (this.readLines.ContainsKey(stream) && (this.minFromStreams == null || this.readLines[stream].CompareTo(this.minFromStreams) <= 0))
+                    if (this.readLines.ContainsKey(stream) && (this.minFromStreams == null || this.readLines[stream].String.CompareTo(this.minFromStreams) <= 0))
                     {
                         this.minStream = stream;
-                        this.minFromStreams = readLines[stream];
+                        this.minFromStreams = readLines[stream].String;
                     }
                 }
 
                 var resultToAdd = this.minFromStreams + Environment.NewLine;
-                this.readBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(resultToAdd));
+
+                for (long i = 0; i < this.readLines[this.minStream].Count; i++)
+                {
+                    streamedLines++;
+                    this.readBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(resultToAdd));
+                }
 
                 this.readLines[this.minStream] = null;
 

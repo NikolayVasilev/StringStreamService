@@ -87,6 +87,12 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StringStreamService.Library\StringStreamService.Library.csproj">
+      <Project>{eb51e4ea-2e71-4a3e-bbbc-cb8b862f7064}</Project>
+      <Name>StringStreamService.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

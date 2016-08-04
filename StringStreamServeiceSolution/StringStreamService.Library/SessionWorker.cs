@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace StringStreamService.Service
 {
-    internal class SessionWorker : ISessionWorker
+    public class SessionWorker : ISessionWorker
     {
         public Guid Id { get; private set; }
 
         private TextProcessor processor;
 
-        internal SessionWorker()
+        public SessionWorker()
         {
             this.Id = Guid.NewGuid();
             this.processor = new TextProcessor(this);
