@@ -118,7 +118,7 @@ namespace StringStreamService.Service
             {
                 foreach (var stream in this.streamReaders)
                 {
-                    if(!this.readLines.ContainsKey(stream) && !stream.EndOfStream)
+                    if (!this.readLines.ContainsKey(stream) && !stream.EndOfStream)
                     {
                         this.readLines.Add(stream, null);
                     }

@@ -18,7 +18,7 @@ namespace StringStreamService.Service
         [OperationContract]
         void PutStreamData(Guid streamId, string[] text);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = false)]
         Stream GetSortedStream(Guid streamId);
 
         [OperationContract]

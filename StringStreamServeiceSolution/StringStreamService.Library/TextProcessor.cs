@@ -10,7 +10,8 @@ namespace StringStreamService.Service
 {
     public class TextProcessor
     {
-        private static readonly long MaxBufferSize = 1000000;
+        //private static readonly long MaxBufferSize = 1000000;
+        private static readonly long MaxBufferSize = 800000;
         private static readonly string FolderBase = @"\StringStreamService\TextsCache\";
         private long currentMaxEncounters = 0;
         private int bufferSize = 1000;

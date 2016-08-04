@@ -32,6 +32,7 @@ namespace StringStreamService.Service
             }
         }
 
+        [OperationBehavior]
         public Stream GetSortedStream(Guid streamId)
         {
             var sessionWorker = this.GetSessionWorker(streamId);

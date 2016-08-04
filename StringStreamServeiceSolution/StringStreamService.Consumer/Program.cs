@@ -80,7 +80,7 @@ namespace StringStreamService.Consumer
 
         private static void TryLargeFileStreaming()
         {
-            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile_guids10.txt";
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile_guidsManyValues.txt";
 
             var serviceClient = new ServiceReference1.StringStreamServiceClient();
 
