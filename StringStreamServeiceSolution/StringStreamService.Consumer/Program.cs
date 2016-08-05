@@ -21,7 +21,7 @@ namespace StringStreamService.Consumer
 
         private static void TryLargeFileStreamingNoService()
         {
-            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile_guids16G.txt";
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile_guids10.txt";
 
             //var serviceClient = new ServiceReference1.StringStreamServiceClient();
             var processor = new TextProcessor(new SessionWorker());
@@ -81,6 +81,7 @@ namespace StringStreamService.Consumer
         private static void TryLargeFileStreaming()
         {
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile_guidsManyValues.txt";
+            //string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + "largeFile_guids10.txt";
 
             var serviceClient = new ServiceReference1.StringStreamServiceClient();
 

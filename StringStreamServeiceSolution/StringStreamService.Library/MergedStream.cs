@@ -123,9 +123,10 @@ namespace StringStreamService.Service
                         this.readLines.Add(stream, null);
                     }
 
-                    if (this.readLines.ContainsKey(stream) && stream.EndOfStream)
+                    if (this.readLines.ContainsKey(stream) && this.readLines[stream] == null && stream.EndOfStream)
                     {
                         this.readLines.Remove(stream);
+                        continue;
                     }
 
                     if (this.readLines.ContainsKey(stream) && this.readLines[stream] == null)
@@ -133,7 +134,7 @@ namespace StringStreamService.Service
                         readLines[stream] = new StringEncounter(stream.ReadLine());
                     }
 
-                    if (this.readLines.ContainsKey(stream) && (this.minFromStreams == null || this.readLines[stream].String.CompareTo(this.minFromStreams) <= 0))
+                    if (this.readLines.ContainsKey(stream) && (this.minFromStreams == null || this.readLines[stream].String.CompareTo(this.minFromStreams) < 0))
                     {
                         this.minStream = stream;
                         this.minFromStreams = readLines[stream].String;
