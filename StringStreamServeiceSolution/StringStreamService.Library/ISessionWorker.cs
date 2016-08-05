@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StringStreamService.Service
+namespace StringStreamService.Engine
 {
     public interface ISessionWorker
     {

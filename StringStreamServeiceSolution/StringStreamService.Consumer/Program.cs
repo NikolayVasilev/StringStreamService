@@ -1,5 +1,5 @@
 ﻿using StringStreamService.Consumer.ServiceReference1;
-using StringStreamService.Service;
+using StringStreamService.Engine;
 using System;
 using System.Collections.Generic;
 using System.IO;

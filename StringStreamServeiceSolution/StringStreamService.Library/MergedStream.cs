@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using System.Diagnostics;
 
-namespace StringStreamService.Service
+namespace StringStreamService.Engine
 {
     public class MergedStream : Stream
     {
