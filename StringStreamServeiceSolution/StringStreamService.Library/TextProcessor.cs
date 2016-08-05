@@ -18,7 +18,6 @@ namespace StringStreamService.Engine
         private int bufferSize = 1000;
         //private int bufferSize = 1;
 
-        internal List<string> CurrentBuffer { get; private set; }
         internal List<string> CacheFilePaths { get; private set; }
 
         internal Dictionary<string, long> LinesCounts { get; private set; }
@@ -29,32 +28,22 @@ namespace StringStreamService.Engine
         public TextProcessor(ISessionWorker sessionWorker)
         {
             this.sessionWorker = sessionWorker;
-            this.CurrentBuffer = new List<string>(bufferSize);
             this.CacheFilePaths = new List<string>();
             this.LinesCounts = new Dictionary<string, long>();
         }
 
         public Stream GetSortedStream()
         {
-            if (this.CurrentBuffer.Count > 0)
-            {
-                this.DumpBuffer();
-            }
-
             if(this.LinesCounts.Keys.Count > 0)
             {
                 this.DumpBuffer();
             }
 
             return new MergedStream(this.CacheFilePaths.ToList());
-
-            //return new FileStream(this.CacheFilePaths.FirstOrDefault(), FileMode.Open);
         }
 
         public void AppendLine(string line)
         {
-            //this.CurrentBuffer.Add(line);
-
             if (!this.LinesCounts.ContainsKey(line))
             {
                 this.LinesCounts.Add(line, 0);
@@ -73,11 +62,6 @@ namespace StringStreamService.Engine
             }
 
             if(this.LinesCounts.Keys.Count >= bufferSize)
-            {
-                this.DumpBuffer();
-            }
-
-            if (this.CurrentBuffer.Count >= bufferSize)
             {
                 this.DumpBuffer();
             }
@@ -150,12 +134,9 @@ namespace StringStreamService.Engine
 
         private void DumpBuffer()
         {
-            var bufferCopy = this.CurrentBuffer.ToList();
             var dictionary = this.LinesCounts;
 
             this.LinesCounts = new Dictionary<string, long>();
-            this.CurrentBuffer.Clear();
-
 
             var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + FolderBase + this.sessionWorker.Id.ToString();
             var writePath = basePath + "\\" + this.currentDumpsCount++ + ".txt";
@@ -165,26 +146,17 @@ namespace StringStreamService.Engine
                 Directory.CreateDirectory(basePath);
             }
 
-            var sortedCopy = bufferCopy.OrderBy(s => s).ToList();
-
             //Task.Factory.StartNew(() =>
             //{
             using (StreamWriter output = new StreamWriter(writePath))
             {
 
-                //foreach (var line in sortedCopy)
-                //{
-                //    output.WriteLine(line);
-                //}
 
                 var sortedKeys = dictionary.Keys.OrderBy(k => k);
 
                 foreach (var item in sortedKeys)
                 {
-                    //for (int i = 0; i < dictionary[item]; i++)
-                    //{
-                    //    output.WriteLine(item);
-                    //}
+
 
                     output.WriteLine(string.Format("{0} {1}", dictionary[item], item));
                 }

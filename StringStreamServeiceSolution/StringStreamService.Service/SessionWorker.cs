@@ -12,7 +12,7 @@ namespace StringStreamService.Service
     {
         public Guid Id { get; private set; }
 
-        private TextProcessor processor;
+        private readonly TextProcessor processor;
 
         internal SessionWorker()
         {
