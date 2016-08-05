@@ -20,5 +20,10 @@ namespace StringStreamService.Engine
 
         public long Count { get; set; }
         public string String { get; set; }
+
+        public override string ToString()
+        {
+            return this.Count + " " + this.String;
+        }
     }
 }

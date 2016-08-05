@@ -12,6 +12,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringStreamService.Library
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringStreamService.Service", "StringStreamService.Service\StringStreamService.Service.csproj", "{1CB25693-1853-4E80-8EAF-C8EAE61FBCB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringStreamService.UIConsumer", "StringStreamService.UIConsumer\StringStreamService.UIConsumer.csproj", "{D925E731-B4BB-48D3-B7FC-5B18178418ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1CB25693-1853-4E80-8EAF-C8EAE61FBCB8} = {1CB25693-1853-4E80-8EAF-C8EAE61FBCB8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +35,10 @@ Global
 		{1CB25693-1853-4E80-8EAF-C8EAE61FBCB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CB25693-1853-4E80-8EAF-C8EAE61FBCB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CB25693-1853-4E80-8EAF-C8EAE61FBCB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

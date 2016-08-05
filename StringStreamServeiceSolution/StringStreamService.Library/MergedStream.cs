@@ -163,6 +163,11 @@ namespace StringStreamService.Engine
 
         private bool HasData()
         {
+            if(this.readLines.Count > 0 && this.streamReaders.Any(sr => this.readLines.ContainsKey(sr) && this.readLines[sr] != null))
+            {
+                return true;
+            }
+
             return this.streamReaders.Any(sr => !sr.EndOfStream);
         }
 
