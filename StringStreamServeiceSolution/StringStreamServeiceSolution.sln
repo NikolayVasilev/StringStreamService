@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringStreamService.UIConsu
 		{1CB25693-1853-4E80-8EAF-C8EAE61FBCB8} = {1CB25693-1853-4E80-8EAF-C8EAE61FBCB8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringStreamService.Tests", "StringStreamService.Tests\StringStreamService.Tests.csproj", "{1B71F709-A44E-444E-AE45-C21D6776ED99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D925E731-B4BB-48D3-B7FC-5B18178418ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B71F709-A44E-444E-AE45-C21D6776ED99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B71F709-A44E-444E-AE45-C21D6776ED99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B71F709-A44E-444E-AE45-C21D6776ED99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B71F709-A44E-444E-AE45-C21D6776ED99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

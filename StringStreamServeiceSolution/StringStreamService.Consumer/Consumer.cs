@@ -106,7 +106,7 @@ namespace StringStreamService.Consumer
 
         private static void TryLargeFileStreamingNoService(string fileName)
         {
-            var processor = new TextProcessor(new SessionWorker());
+            var processor = new TextProcessor(Guid.NewGuid());
 
             Console.WriteLine("StartUpload");
             var startUpload = DateTime.Now;

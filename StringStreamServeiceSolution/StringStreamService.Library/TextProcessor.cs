@@ -22,12 +22,12 @@ namespace StringStreamService.Engine
 
         internal Dictionary<string, long> LinesCounts { get; private set; }
 
-        private ISessionWorker sessionWorker;
         private long currentDumpsCount = 0;
+        private Guid sessionId;
 
-        public TextProcessor(ISessionWorker sessionWorker)
+        public TextProcessor(Guid sessionId)
         {
-            this.sessionWorker = sessionWorker;
+            this.sessionId = sessionId;
             this.CacheFilePaths = new List<string>();
             this.LinesCounts = new Dictionary<string, long>();
         }
@@ -138,7 +138,7 @@ namespace StringStreamService.Engine
 
             this.LinesCounts = new Dictionary<string, long>();
 
-            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + FolderBase + this.sessionWorker.Id.ToString();
+            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + FolderBase + this.sessionId.ToString();
             var writePath = basePath + "\\" + this.currentDumpsCount++ + ".txt";
 
             if (!Directory.Exists(basePath))

@@ -34,6 +34,7 @@ namespace StringStreamService.UIConsumer
 
         private long sentLines = 0;
         private TextProcessor textProcessor;
+        private Task writeTask;
 
         public MainWindow()
         {
@@ -43,7 +44,7 @@ namespace StringStreamService.UIConsumer
             this.guid = this.client.BeginStream();
             this.DataContext = this;
 
-            this.textProcessor = new TextProcessor(new SessionWorker());
+            this.textProcessor = new TextProcessor(Guid.NewGuid());
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -98,37 +99,49 @@ namespace StringStreamService.UIConsumer
 
         private void Read()
         {
-            Task.Factory.StartNew((Action)(() =>
+            if (this.writeTask != null)
             {
-                var stream = this.client.GetSortedStream(this.guid);
-                //var stream = this.textProcessor.GetSortedStream();
-
-                long sortedLines = 0;
-                this.UpdateReadLines((long)sortedLines);
-
-                using (StreamReader reader = new StreamReader(stream))
+                this.writeTask.ContinueWith((argument) => { this.ReadExecute(); });
+            }
+            else
+            {
+                Task.Factory.StartNew((Action)(() =>
                 {
-                    while (!reader.EndOfStream)
+                    ReadExecute();
+                }));
+            }
+        }
+
+        private void ReadExecute()
+        {
+            var stream = this.client.GetSortedStream(this.guid);
+            //var stream = this.textProcessor.GetSortedStream();
+
+            long sortedLines = 0;
+            this.UpdateReadLines((long)sortedLines);
+
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string read = reader.ReadLine();
+
+                    //Debug.WriteLine(read);
+                    sortedLines++;
+
+                    if (sortedLines % 1000 == 0)
                     {
-                        string read = reader.ReadLine();
-
-                        //Debug.WriteLine(read);
-                        sortedLines++;
-
-                        if (sortedLines % 1000 == 0)
-                        {
-                            this.UpdateReadLines((long)sortedLines);
-                        }
-                        else if (sortedLines % 20000 == 0)
-                        {
-                            Thread.Sleep(TimeSpan.FromMilliseconds(10000));
-                            Task.Delay(TimeSpan.FromMilliseconds(10000));
-                        }
+                        this.UpdateReadLines((long)sortedLines);
+                    }
+                    else if (sortedLines % 20000 == 0)
+                    {
+                        Thread.Sleep(TimeSpan.FromMilliseconds(10000));
+                        Task.Delay(TimeSpan.FromMilliseconds(10000));
                     }
                 }
+            }
 
-                this.UpdateReadLines((long)sortedLines);
-            }));
+            this.UpdateReadLines((long)sortedLines);
         }
 
         private void UpdateReadLines(long sortedLines)
@@ -141,7 +154,7 @@ namespace StringStreamService.UIConsumer
 
         private void SendLines(long linesToSend)
         {
-            Task.Factory.StartNew((Action)(() =>
+            this.writeTask = Task.Factory.StartNew((Action)(() =>
             {
                 long lines = 0;
 
@@ -171,6 +184,8 @@ namespace StringStreamService.UIConsumer
                 readLines.Clear();
 
                 this.UpdateSentLines(this.sentLines);
+
+                this.writeTask = null;
             }));
 
         }

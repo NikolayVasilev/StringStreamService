@@ -16,7 +16,7 @@ namespace StringStreamService.Engine
         public SessionWorker()
         {
             this.Id = Guid.NewGuid();
-            this.processor = new TextProcessor(this);
+            this.processor = new TextProcessor(this.Id);
         }
 
         public void Clear()
