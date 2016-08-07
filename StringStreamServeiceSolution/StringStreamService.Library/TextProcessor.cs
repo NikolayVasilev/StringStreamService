@@ -24,17 +24,19 @@ namespace StringStreamService.Engine
 
         private long currentDumpsCount = 0;
         private Guid sessionId;
+        private string baseDirectoryPath;
 
         public TextProcessor(Guid sessionId)
         {
             this.sessionId = sessionId;
             this.CacheFilePaths = new List<string>();
             this.LinesCounts = new Dictionary<string, long>();
+            this.baseDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + FolderBase + this.sessionId.ToString();
         }
 
         public Stream GetSortedStream()
         {
-            if(this.LinesCounts.Keys.Count > 0)
+            if (this.LinesCounts.Keys.Count > 0)
             {
                 this.DumpBuffer();
             }
@@ -51,17 +53,17 @@ namespace StringStreamService.Engine
 
             this.LinesCounts[line]++;
 
-            if(this.LinesCounts[line] > this.currentMaxEncounters)
+            if (this.LinesCounts[line] > this.currentMaxEncounters)
             {
                 this.currentMaxEncounters = this.LinesCounts[line];
             }
 
-            if(this.currentMaxEncounters < 100 && this.bufferSize < MaxBufferSize)
+            if (this.currentMaxEncounters < 100 && this.bufferSize < MaxBufferSize)
             {
                 this.bufferSize++;
             }
 
-            if(this.LinesCounts.Keys.Count >= bufferSize)
+            if (this.LinesCounts.Keys.Count >= bufferSize)
             {
                 this.DumpBuffer();
             }
@@ -138,12 +140,11 @@ namespace StringStreamService.Engine
 
             this.LinesCounts = new Dictionary<string, long>();
 
-            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + FolderBase + this.sessionId.ToString();
-            var writePath = basePath + "\\" + this.currentDumpsCount++ + ".txt";
+            var writePath = this.baseDirectoryPath + "\\" + this.currentDumpsCount++ + ".txt";
 
-            if (!Directory.Exists(basePath))
+            if (!Directory.Exists(this.baseDirectoryPath))
             {
-                Directory.CreateDirectory(basePath);
+                Directory.CreateDirectory(this.baseDirectoryPath);
             }
 
             //Task.Factory.StartNew(() =>
@@ -168,6 +169,19 @@ namespace StringStreamService.Engine
 
         public void Clear()
         {
+        }
+
+        public void ClearFiles()
+        {
+            foreach (var file in this.CacheFilePaths)
+            {
+                File.Delete(file);
+            }
+
+            if (Directory.Exists(this.baseDirectoryPath))
+            {
+                Directory.Delete(this.baseDirectoryPath, true);
+            }
         }
     }
 }
