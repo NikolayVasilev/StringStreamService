@@ -17,6 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading;
+using StringStreamService.Engine;
 
 namespace StringStreamService.UIConsumer
 {
@@ -30,6 +32,9 @@ namespace StringStreamService.UIConsumer
         private Guid guid;
         private StreamReader fileReader;
 
+        private long sentLines = 0;
+        private TextProcessor textProcessor;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,6 +42,8 @@ namespace StringStreamService.UIConsumer
             this.client = new StringStreamServiceClient();
             this.guid = this.client.BeginStream();
             this.DataContext = this;
+
+            this.textProcessor = new TextProcessor(new SessionWorker());
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -91,12 +98,13 @@ namespace StringStreamService.UIConsumer
 
         private void Read()
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew((Action)(() =>
             {
-                var stream = this.client.GetSortedStream(guid);
+                var stream = this.client.GetSortedStream(this.guid);
+                //var stream = this.textProcessor.GetSortedStream();
 
                 long sortedLines = 0;
-                UpdateReadLines(sortedLines);
+                this.UpdateReadLines((long)sortedLines);
 
                 using (StreamReader reader = new StreamReader(stream))
                 {
@@ -109,47 +117,70 @@ namespace StringStreamService.UIConsumer
 
                         if (sortedLines % 1000 == 0)
                         {
-                            UpdateReadLines(sortedLines);
+                            this.UpdateReadLines((long)sortedLines);
+                        }
+                        else if (sortedLines % 20000 == 0)
+                        {
+                            Thread.Sleep(TimeSpan.FromMilliseconds(10000));
+                            Task.Delay(TimeSpan.FromMilliseconds(10000));
                         }
                     }
                 }
 
-                UpdateReadLines(sortedLines);
-            });
+                this.UpdateReadLines((long)sortedLines);
+            }));
         }
 
         private void UpdateReadLines(long sortedLines)
         {
-            Dispatcher.BeginInvoke((Action) (() =>
-             {
-                 this.ReceivedLinesLabel.Text = sortedLines.ToString();
-             }));
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                this.ReceivedLinesLabel.Text = sortedLines.ToString();
+            }));
         }
 
         private void SendLines(long linesToSend)
         {
-            long lines = 0;
-
-            List<string> readLines = new List<string>();
-
-            while (!this.fileReader.EndOfStream && lines < linesToSend)
+            Task.Factory.StartNew((Action)(() =>
             {
-                var read = this.fileReader.ReadLine();
-                lines++;
+                long lines = 0;
 
-                readLines.Add(read);
-
-                if (readLines.Count > 10000)
+                List<string> readLines = new List<string>();
+                while (!this.fileReader.EndOfStream && lines < linesToSend)
                 {
-                    this.client.PutStreamData(guid, readLines.ToArray());
-                    readLines.Clear();
+                    var read = this.fileReader.ReadLine();
+                    //this.textProcessor.AppendLine(read);
+                    lines++;
+                    this.sentLines++;
+
+                    readLines.Add(read);
+
+                    if (readLines.Count > 10000)
+                    {
+                        this.client.PutStreamData(this.guid, readLines.ToArray());
+                        readLines.Clear();
+                    }
+
+                    if (lines % 1000 == 0)
+                    {
+                        this.UpdateSentLines(this.sentLines);
+                    }
                 }
-            }
 
-            this.client.PutStreamData(guid, readLines.ToArray());
-            readLines.Clear();
+                this.client.PutStreamData(this.guid, readLines.ToArray());
+                readLines.Clear();
 
-            this.SentLinesLabel.Text = (long.Parse(this.SentLinesLabel.Text) + lines).ToString();
+                this.UpdateSentLines(this.sentLines);
+            }));
+
+        }
+
+        private void UpdateSentLines(long lines)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                this.SentLinesLabel.Text = lines.ToString();
+            }));
         }
 
         internal void CleanUp()
@@ -161,7 +192,13 @@ namespace StringStreamService.UIConsumer
                 this.fileReader = null;
             }
 
+            this.client.EndStream(this.guid);
             this.client.Close();
+            this.sentLines = 0;
+
+            this.SentLinesLabel.Text = "0";
+            this.ReceivedLinesLabel.Text = "0";
+
         }
 
         private void RestartBtn_Click(object sender, RoutedEventArgs e)
@@ -169,6 +206,7 @@ namespace StringStreamService.UIConsumer
             this.CleanUp();
 
             this.client = new StringStreamServiceClient();
+            this.guid = this.client.BeginStream();
         }
     }
 }

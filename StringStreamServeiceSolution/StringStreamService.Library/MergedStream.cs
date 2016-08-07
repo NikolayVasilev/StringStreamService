@@ -187,7 +187,10 @@ namespace StringStreamService.Engine
             List<StreamReader> result = new List<StreamReader>();
             foreach (var path in this.fileList)
             {
-                result.Add(new StreamReader(path));
+                if (File.Exists(path))
+                {
+                    result.Add(new StreamReader(path));
+                }
             }
 
             return result;
